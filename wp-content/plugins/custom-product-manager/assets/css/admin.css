@@ -1,0 +1,204 @@
+/* Admin Styles */
+.category-box,
+.subcategory-box,
+.variation-box {
+    margin: 15px 0;
+    padding: 15px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 3px;
+}
+
+.category-header,
+.subcategory-header,
+.variation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.category-actions,
+.subcategory-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.status-active {
+    color: #46b450;
+}
+
+.status-inactive {
+    color: #d63638;
+}
+
+/* Subcategory Options Styles */
+.subcat-options {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.subcat-options label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.options-list {
+    margin: 10px 0;
+}
+
+.option-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 8px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 3px;
+}
+
+.option-row input {
+    flex: 1;
+    max-width: 400px;
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.option-row input:focus {
+    border-color: #0073aa;
+    outline: none;
+    box-shadow: 0 0 0 1px #0073aa;
+}
+
+.subcategory-full-item {
+    margin: 15px 0;
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.subcat-header {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.subcat-header input[type="text"] {
+    flex: 1;
+    max-width: 400px;
+}
+
+.subcat-header select {
+    width: 150px;
+}
+
+/* Make it clear that options section is important */
+.subcat-options {
+    border-left: 3px solid #0073aa;
+    background: #f0f8ff;
+}
+
+/* Hierarchical Form Styles */
+#cpm-main-categories-wrapper {
+    margin-top: 15px;
+}
+
+.cpm-main-category-item {
+    margin: 15px 0;
+    padding: 15px;
+    border: 2px solid #0073aa;
+    background: #f0f8ff;
+    border-radius: 4px;
+}
+
+.cpm-main-category-item .cpm-main-category-name {
+    flex: 1;
+    max-width: 300px;
+}
+
+.cpm-category-item {
+    margin: 10px 0 10px 30px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    border-radius: 4px;
+}
+
+.cpm-category-item .cpm-category-name {
+    flex: 1;
+    max-width: 300px;
+}
+
+.cpm-option-item,
+.cpm-country-item,
+.cpm-quantity-item,
+.cpm-price-item {
+    margin: 10px 0 10px 30px;
+    padding: 10px;
+    border-radius: 3px;
+}
+
+.cpm-option-item {
+    border: 1px solid #ccc;
+    background: #fff;
+}
+
+.cpm-country-item {
+    border: 1px solid #ccc;
+    background: #fff;
+}
+
+.cpm-quantity-item {
+    border: 1px solid #bbb;
+    background: #f5f5f5;
+}
+
+.cpm-price-item {
+    border: 1px solid #aaa;
+    background: #fff;
+}
+
+.cpm-category-content,
+.cpm-option-content,
+.cpm-country-content,
+.cpm-quantity-content {
+    margin-top: 10px;
+}
+
+.cpm-options-container,
+.cpm-countries-container,
+.cpm-quantities-container,
+.cpm-prices-container {
+    margin-top: 10px;
+}
+
+.cpm-delete-category-btn,
+.cpm-delete-option-btn,
+.cpm-delete-country-btn,
+.cpm-delete-quantity-btn,
+.cpm-delete-price-btn {
+    background: #dc3232 !important;
+    color: #fff !important;
+    border-color: #dc3232 !important;
+}
+
+.cpm-delete-category-btn:hover,
+.cpm-delete-option-btn:hover,
+.cpm-delete-country-btn:hover,
+.cpm-delete-quantity-btn:hover,
+.cpm-delete-price-btn:hover {
+    background: #a00 !important;
+    border-color: #a00 !important;
+}
+

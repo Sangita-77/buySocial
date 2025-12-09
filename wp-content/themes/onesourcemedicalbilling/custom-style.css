@@ -1,0 +1,48 @@
+/*
+font-family: 'Poppins', sans-serif;
+font-family: 'Oswald', sans-serif;
+font-family: 'Montserrat', sans-serif;
+font-family: 'Rubik', sans-serif;
+*/
+
+
+body .site{ padding: 0; margin: 0; box-shadow: none; max-width: none; width: 100%; overflow: hidden; }
+footer#colophon{ max-width: none; margin: 0; padding: 0; border-top: none; }
+a:link{outline: none !important;}
+img.img-fluid{display: block;}
+.fancy {line-height: 0.5;text-align: center;overflow:hidden;}
+.fancy span {display: inline-block;position: relative;}
+.fancy span:before,
+.fancy span:after {content: "";position: absolute;height:1px;top:50%;width:273px; background:#27aae2;}
+.fancy span:before {right: 100%;margin-right: 15px;width:143px;}
+.fancy span:after {left: 100%;margin-left: 15px;}
+
+
+/* Responsive
+=================================*/
+
+@media (min-width: 1460px) {
+    .container{max-width: 1430px;}
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+
+}
+@media (min-width: 768px) and (max-width: 991px) {
+
+}
+@media (min-width: 768px) {
+	
+}
+@media (max-width: 767px) {
+	
+}
+@media (min-width: 580px) and (max-width: 767px) {
+
+}
+@media (min-width: 401px) and (max-width: 579px) {
+
+}
+@media (max-width: 400px) {
+
+}
+
