@@ -14,6 +14,9 @@ class CPM_Frontend {
         add_shortcode('cpm_product', array($this, 'product_shortcode'));
         add_shortcode('cpm_main_category_details', array($this, 'main_category_details_shortcode'));
         add_shortcode('cpm_track_order', array($this, 'track_order_shortcode'));
+        add_shortcode('cpm_statistics', array($this, 'statistics_shortcode'));
+        // Automatically display statistics on home page
+        add_filter('the_content', array($this, 'auto_display_statistics'), 20);
         add_action('wp', array($this, 'init_session'));
         add_action('wp', array($this, 'handle_my_account_subpages_wp'), 5);
         add_action('template_redirect', array($this, 'handle_track_order_page'), 5);
@@ -1229,6 +1232,121 @@ class CPM_Frontend {
         });
         </script>
         <?php
+    }
+    
+    /**
+     * Statistics shortcode - displays business statistics
+     */
+    public function statistics_shortcode($atts) {
+        global $wpdb;
+        
+        $atts = shortcode_atts(array(
+            'layout' => 'grid', // grid or list
+            'columns' => '4'
+        ), $atts);
+        
+        // Get Countries Served - count unique countries from all products' main categories
+        $countries = array();
+        $products = $wpdb->get_results("SELECT id FROM " . CPM_Database::get_table('products') . " WHERE status = 'active'");
+        
+        foreach ($products as $product) {
+            $option_name = '_cpm_product_' . $product->id . '_main_categories';
+            $saved_data = get_option($option_name, '');
+            
+            if ($saved_data) {
+                $main_categories = json_decode($saved_data, true);
+                if (is_array($main_categories)) {
+                    foreach ($main_categories as $main_cat) {
+                        if (isset($main_cat['categories']) && is_array($main_cat['categories'])) {
+                            foreach ($main_cat['categories'] as $cat) {
+                                if (isset($cat['countries']) && is_array($cat['countries'])) {
+                                    foreach ($cat['countries'] as $country) {
+                                        if (isset($country['name']) && !empty($country['name'])) {
+                                            $countries[$country['name']] = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $countries_count = count($countries);
+        
+        // Get Orders Delivered - count completed orders
+        $orders_delivered = $wpdb->get_var(
+            "SELECT COUNT(*) FROM " . CPM_Database::get_table('orders') . " WHERE order_status = 'completed'"
+        );
+        
+        // Get Happy Customers - count unique customers who have approved reviews with rating > 4
+        $happy_customers = $wpdb->get_var(
+            "SELECT COUNT(DISTINCT reviewer_email) FROM " . CPM_Database::get_table('reviews') . 
+            " WHERE status = 'approved' AND rating >= 4 AND reviewer_email IS NOT NULL AND reviewer_email != ''"
+        );
+        
+        // Get In Business - years since first order or plugin installation
+        $first_order_date = $wpdb->get_var(
+            "SELECT MIN(order_date) FROM " . CPM_Database::get_table('orders') . " WHERE order_date IS NOT NULL"
+        );
+        
+        $in_business_years = 0;
+        if ($first_order_date) {
+            $first_date = new DateTime($first_order_date);
+            $now = new DateTime();
+            $diff = $now->diff($first_date);
+            $in_business_years = $diff->y;
+        } else {
+            // Fallback to plugin installation date
+            $plugin_install_date = get_option('cpm_install_date', '');
+            if ($plugin_install_date) {
+                $first_date = new DateTime($plugin_install_date);
+                $now = new DateTime();
+                $diff = $now->diff($first_date);
+                $in_business_years = $diff->y;
+            } else {
+                // Set install date if not exists
+                $in_business_years = 0;
+                update_option('cpm_install_date', current_time('mysql'));
+            }
+        }
+        
+        // If no years, show at least 1
+        if ($in_business_years == 0) {
+            $in_business_years = 1;
+        }
+        
+        ob_start();
+        include CPM_PLUGIN_DIR . 'frontend/views/statistics.php';
+        return ob_get_clean();
+    }
+    
+    /**
+     * Automatically display statistics on home page
+     */
+    public function auto_display_statistics($content) {
+        // Only show on front page/home page
+        if (!is_front_page() && !is_home()) {
+            return $content;
+        }
+        
+        // Don't add if already in content (to avoid duplicates)
+        if (strpos($content, 'cpm-statistics-wrapper') !== false) {
+            return $content;
+        }
+        
+        // Don't add if shortcode is already present
+        if (has_shortcode($content, 'cpm_statistics')) {
+            return $content;
+        }
+        
+        // Get statistics HTML
+        $statistics_html = $this->statistics_shortcode(array('layout' => 'grid', 'columns' => '4'));
+        
+        // Add statistics after content with some spacing
+        $content .= '<div style="margin: 40px 0;">' . $statistics_html . '</div>';
+        
+        return $content;
     }
 }
 

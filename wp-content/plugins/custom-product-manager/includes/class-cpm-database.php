@@ -294,6 +294,11 @@ class CPM_Database {
             update_option('cpm_my_account_page_id', $my_account_page->ID);
         }
         
+        // Set plugin installation date for statistics
+        if (!get_option('cpm_install_date')) {
+            update_option('cpm_install_date', current_time('mysql'));
+        }
+        
         // Flush rewrite rules to register new endpoints
         flush_rewrite_rules();
     }
