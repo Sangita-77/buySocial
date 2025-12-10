@@ -294,6 +294,47 @@ class CPM_Admin {
         $action = isset($_GET['action']) ? sanitize_text_field($_GET['action']) : 'list';
         $order_id = isset($_GET['order_id']) ? intval($_GET['order_id']) : 0;
         
+        // Check for order status update first (can come from POST when viewing order)
+        if (isset($_POST['order_status']) && isset($_POST['_wpnonce'])) {
+            // Get order_id from POST if not in GET (form submission from order view)
+            $update_order_id = isset($_POST['order_id']) ? intval($_POST['order_id']) : $order_id;
+            
+            if ($update_order_id && check_admin_referer('update_order_status_' . $update_order_id)) {
+                $status = sanitize_text_field($_POST['order_status']);
+                $result = $wpdb->update(
+                    CPM_Database::get_table('orders'),
+                    array('order_status' => $status),
+                    array('id' => $update_order_id),
+                    array('%s'),
+                    array('%d')
+                );
+                
+                if ($result !== false) {
+                    echo '<div class="notice notice-success"><p>' . __('Order status updated.', 'custom-product-manager') . '</p></div>';
+                    // Update order_id to show the updated order
+                    $order_id = $update_order_id;
+                    $action = 'view';
+                } else {
+                    echo '<div class="notice notice-error"><p>' . __('Error updating order status.', 'custom-product-manager') . '</p></div>';
+                }
+            }
+        }
+        
+        // Handle legacy update_status action from URL
+        if ($action === 'update_status' && $order_id && check_admin_referer('update_order_status_' . $order_id)) {
+            $status = sanitize_text_field($_POST['order_status']);
+            $wpdb->update(
+                CPM_Database::get_table('orders'),
+                array('order_status' => $status),
+                array('id' => $order_id),
+                array('%s'),
+                array('%d')
+            );
+            echo '<div class="notice notice-success"><p>' . __('Order status updated.', 'custom-product-manager') . '</p></div>';
+            // Redirect to view the order after update
+            $action = 'view';
+        }
+        
         if ($action === 'view' && $order_id) {
             $order = $wpdb->get_row($wpdb->prepare(
                 "SELECT * FROM " . CPM_Database::get_table('orders') . " WHERE id = %d",
@@ -307,18 +348,6 @@ class CPM_Admin {
             
             include CPM_PLUGIN_DIR . 'admin/views/order-view.php';
             return;
-        }
-        
-        if ($action === 'update_status' && $order_id && check_admin_referer('update_order_status_' . $order_id)) {
-            $status = sanitize_text_field($_POST['order_status']);
-            $wpdb->update(
-                CPM_Database::get_table('orders'),
-                array('order_status' => $status),
-                array('id' => $order_id),
-                array('%s'),
-                array('%d')
-            );
-            echo '<div class="notice notice-success"><p>' . __('Order status updated.', 'custom-product-manager') . '</p></div>';
         }
         
         $orders = $wpdb->get_results("SELECT * FROM " . CPM_Database::get_table('orders') . " ORDER BY id DESC LIMIT 50");

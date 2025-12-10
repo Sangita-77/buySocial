@@ -25,6 +25,7 @@ if (!defined('ABSPATH')) {
                         <td>
                             <form method="post" action="" style="display: inline;">
                                 <?php wp_nonce_field('update_order_status_' . $order->id); ?>
+                                <input type="hidden" name="order_id" value="<?php echo esc_attr($order->id); ?>" />
                                 <select name="order_status">
                                     <option value="pending" <?php selected($order->order_status, 'pending'); ?>><?php _e('Pending', 'custom-product-manager'); ?></option>
                                     <option value="processing" <?php selected($order->order_status, 'processing'); ?>><?php _e('Processing', 'custom-product-manager'); ?></option>
