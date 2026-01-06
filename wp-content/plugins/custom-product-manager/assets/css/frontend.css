@@ -677,11 +677,13 @@
     font-size: 80px;
 }
 
-.cpm-icon-facebook::before { content: 'f'; }
+/* .cpm-icon-facebook::before { content: 'f'; }
 .cpm-icon-instagram::before { content: '📷'; }
 .cpm-icon-twitter::before { content: '🐦'; }
 .cpm-icon-youtube::before { content: '▶'; }
-.cpm-icon-tiktok::before { content: '🎵'; }
+.cpm-icon-tiktok::before { content: '🎵'; } */
+
+.cpm-product-image{width: 100%;}
 
 .cpm-post-footer {
     display: flex;

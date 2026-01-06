@@ -132,6 +132,11 @@ register_deactivation_hook(__FILE__, function() {
             return;
         }
         
+        // Ensure WordPress media scripts are available for image upload fields
+        if (function_exists('wp_enqueue_media')) {
+            wp_enqueue_media();
+        }
+        
         wp_enqueue_style('cpm-admin-style', CPM_PLUGIN_URL . 'assets/css/admin.css', array(), CPM_VERSION);
         wp_enqueue_script('cpm-admin-script', CPM_PLUGIN_URL . 'assets/js/admin.js', array('jquery'), CPM_VERSION, true);
         
