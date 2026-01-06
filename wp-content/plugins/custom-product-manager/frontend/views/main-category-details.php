@@ -23,6 +23,11 @@ global $wpdb;
                             <div class="cpm-username"><?php echo esc_html($main_category['name']); ?></div>
                         </div>
                         <div class="cpm-post-content">
+                            <?php if (!empty($product_image_url)) : ?>
+                                <div class="cpm-product-image-wrapper">
+                                    <img src="<?php echo esc_url($product_image_url); ?>" alt="<?php echo esc_attr($product->name); ?>" class="cpm-product-image" />
+                                </div>
+                            <?php endif; ?>
                             <div class="cpm-social-icon">
                                 <?php 
                                 $icon_class = 'cpm-icon-facebook';

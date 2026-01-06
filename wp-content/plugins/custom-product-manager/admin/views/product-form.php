@@ -19,6 +19,27 @@ global $wpdb;
                 </td>
             </tr>
             <tr>
+                <th><label for="cpm_product_image"><?php _e('Product Image', 'custom-product-manager'); ?></label></th>
+                <td>
+                    <div style="margin-bottom: 8px;">
+                        <input type="text"
+                               name="product_image"
+                               id="cpm_product_image"
+                               value="<?php echo !empty($product_image_url) ? esc_attr($product_image_url) : ''; ?>"
+                               class="regular-text"
+                               placeholder="<?php esc_attr_e('Image URL or use the uploader', 'custom-product-manager'); ?>" />
+                        <button type="button" class="button" id="cpm_upload_product_image"><?php _e('Upload / Select Image', 'custom-product-manager'); ?></button>
+                        <button type="button" class="button" id="cpm_remove_product_image" <?php echo empty($product_image_url) ? 'style="display:none;"' : ''; ?>><?php _e('Remove', 'custom-product-manager'); ?></button>
+                    </div>
+                    <div id="cpm_product_image_preview" style="max-width: 200px; <?php echo empty($product_image_url) ? 'display:none;' : ''; ?>">
+                        <?php if (!empty($product_image_url)) : ?>
+                            <img src="<?php echo esc_url($product_image_url); ?>" alt="<?php echo esc_attr($product ? $product->name : ''); ?>" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 4px; background: #fff;" />
+                        <?php endif; ?>
+                    </div>
+                    <p class="description"><?php _e('This image will be shown on the main category details page.', 'custom-product-manager'); ?></p>
+                </td>
+            </tr>
+            <tr>
                 <th><label><?php _e('Main Categories', 'custom-product-manager'); ?></label></th>
                 <td>
                     <button type="button" id="add-main-category-btn" class="button button-primary"><?php _e('Add Main Category', 'custom-product-manager'); ?></button>
@@ -143,18 +164,18 @@ global $wpdb;
         </p>
     </form>
     
-    <?php if ($product_id) : ?>
-        <hr />
-        <h2><?php _e('Categories', 'custom-product-manager'); ?></h2>
+    <?php //if ($product_id) : ?>
+        <!-- <hr />
+        <h2><?php //_e('Categories', 'custom-product-manager'); ?></h2>
         <p>
-            <a href="<?php echo admin_url('admin.php?page=cpm-manage-categories&product_id=' . $product_id); ?>" class="button button-primary">
-                <?php _e('Manage Categories, Sub-Categories & Variations', 'custom-product-manager'); ?>
+            <a href="<?php //echo admin_url('admin.php?page=cpm-manage-categories&product_id=' . $product_id); ?>" class="button button-primary">
+                <?php //_e('Manage Categories, Sub-Categories & Variations', 'custom-product-manager'); ?>
             </a>
         </p>
         <div id="cpm-categories-container">
-            <?php include CPM_PLUGIN_DIR . 'admin/views/categories-manager.php'; ?>
-        </div>
-    <?php endif; ?>
+            <?php //include CPM_PLUGIN_DIR . 'admin/views/categories-manager.php'; ?>
+        </div> -->
+    <?php //endif; ?>
 </div>
 
 <script type="text/javascript">
@@ -415,6 +436,54 @@ jQuery(document).ready(function($) {
         };
         return (text || '').toString().replace(/[&<>"']/g, function(m) { return map[m]; });
     }
+    
+    // Product image uploader
+    var cpmMediaFrame;
+    
+    $('#cpm_upload_product_image').on('click', function(e) {
+        e.preventDefault();
+        
+        if (typeof wp === 'undefined' || !wp.media) {
+            return;
+        }
+        
+        // If the media frame already exists, reopen it.
+        if (cpmMediaFrame) {
+            cpmMediaFrame.open();
+            return;
+        }
+        
+        // Create a new media frame
+        cpmMediaFrame = wp.media({
+            title: '<?php echo esc_js(__('Select Product Image', 'custom-product-manager')); ?>',
+            button: {
+                text: '<?php echo esc_js(__('Use this image', 'custom-product-manager')); ?>'
+            },
+            multiple: false
+        });
+        
+        // When an image is selected in the media frame...
+        cpmMediaFrame.on('select', function() {
+            var attachment = cpmMediaFrame.state().get('selection').first().toJSON();
+            if (attachment && attachment.url) {
+                $('#cpm_product_image').val(attachment.url);
+                $('#cpm_product_image_preview').html(
+                    '<img src="' + attachment.url + '" alt="<?php echo esc_js($product ? $product->name : ''); ?>" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 4px; background: #fff;" />'
+                ).show();
+                $('#cpm_remove_product_image').show();
+            }
+        });
+        
+        // Finally, open the modal
+        cpmMediaFrame.open();
+    });
+    
+    $('#cpm_remove_product_image').on('click', function(e) {
+        e.preventDefault();
+        $('#cpm_product_image').val('');
+        $('#cpm_product_image_preview').hide().empty();
+        $(this).hide();
+    });
 });
 </script>
 

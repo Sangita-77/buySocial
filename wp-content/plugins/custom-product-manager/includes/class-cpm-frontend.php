@@ -639,6 +639,9 @@ class CPM_Frontend {
             return '<p>' . __('Product not found.', 'custom-product-manager') . '</p>';
         }
         
+        // Load product image URL if set in admin
+        $product_image_url = get_option('_cpm_product_' . $product_id . '_image_url', '');
+        
         // Get main categories data
         $option_name = '_cpm_product_' . $product_id . '_main_categories';
         $saved_data = get_option($option_name, '');

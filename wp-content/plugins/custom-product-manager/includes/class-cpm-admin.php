@@ -145,6 +145,18 @@ class CPM_Admin {
                 $message = __('Product added successfully.', 'custom-product-manager');
             }
             
+            // Save product image (stored as an option keyed by product ID)
+            if ($product_id) {
+                $product_image_url = isset($_POST['product_image']) ? esc_url_raw($_POST['product_image']) : '';
+                $image_option_name = '_cpm_product_' . $product_id . '_image_url';
+                if (!empty($product_image_url)) {
+                    update_option($image_option_name, $product_image_url);
+                } else {
+                    // Clear image if field is empty
+                    delete_option($image_option_name);
+                }
+            }
+            
             // Save main categories data
             if (isset($_POST['main_categories']) && is_array($_POST['main_categories']) && !empty($_POST['main_categories'])) {
                 // Debug: Log what we received
@@ -270,6 +282,12 @@ class CPM_Admin {
                     $saved_main_categories = array();
                 }
             }
+        }
+        
+        // Load saved product image URL (if any)
+        $product_image_url = '';
+        if ($product_id) {
+            $product_image_url = get_option('_cpm_product_' . $product_id . '_image_url', '');
         }
         
         // Get categories for this product

@@ -28,7 +28,7 @@ if ($order_number) {
 ?>
 
 <div class="cpm-track-order">
-    <h1><?php _e('Track Your Order', 'custom-product-manager'); ?></h1>
+    <!-- <h1><?php //_e('Track Your Order', 'custom-product-manager'); ?></h1> -->
     
     <div class="cpm-track-order-form">
         <form method="get" action="">
